@@ -2,13 +2,18 @@ package com.example.myweather
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,19 +21,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        // SharedPreferences
         loadData()
-        rb_celsius.setOnClickListener{
+
+        // Settings - SharedPreferences
+        rb_celsius.setOnClickListener {
             saveData()
         }
-        rb_fahrenheit.setOnClickListener{
+        rb_fahrenheit.setOnClickListener {
             saveData()
         }
-        rb_english.setOnClickListener{
+        rb_english.setOnClickListener {
             saveData()
         }
-        rb_portuguese.setOnClickListener{
+        rb_portuguese.setOnClickListener {
             saveData()
         }
 
@@ -40,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // SharedPreferences
-    private fun saveData(){
+    private fun saveData() {
         val celsiusTempSelected = rb_celsius.isChecked()
         val englishLanguageSelected = rb_english.isChecked()
 
@@ -54,24 +59,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     // SharedPreferences
-    private fun loadData(){
+    private fun loadData() {
         val sharedPreferences = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
-        val celsiusTempSelected = sharedPreferences.getBoolean("CELSIUS SELECTED",true)
-        val englishLanguageSelected = sharedPreferences.getBoolean("ENGLISH SELECTED",true)
+        val celsiusTempSelected = sharedPreferences.getBoolean("CELSIUS SELECTED", true)
+        val englishLanguageSelected = sharedPreferences.getBoolean("ENGLISH SELECTED", true)
 
-        if ( celsiusTempSelected == true) {
+        if (celsiusTempSelected == true) {
             rb_celsius.setChecked(true)
         } else {
             rb_fahrenheit.setChecked(true)
         }
 
-        if ( englishLanguageSelected == true) {
+        if (englishLanguageSelected == true) {
             rb_english.setChecked(true)
         } else {
             rb_portuguese.setChecked(true)
         }
     }
-
 
 
 }

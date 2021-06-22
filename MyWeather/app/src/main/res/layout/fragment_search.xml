@@ -14,13 +14,11 @@
         android:textSize="20dp"/>
 
     <Button
-        android:id="@+id/buttonWrite"
+        android:id="@+id/buttonSearch"
         android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:text="Search"
         android:layout_margin="10dp"
         android:layout_toRightOf="@+id/et_search"/>
-
-
 
 </RelativeLayout>
