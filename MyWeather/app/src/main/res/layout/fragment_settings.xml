@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FragmentSettings">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragment Settings" />
+        android:id="@+id/tv_temperature_unit"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:gravity="center|left"
+        android:text="Temperature Unit"
+        android:layout_marginLeft="10dp"
+        android:textSize="20dp" />
 
-</FrameLayout>
+    <RadioGroup
+        android:id="@+id/rg_temperature_unit"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation='horizontal'
+        android:layout_below="@+id/tv_temperature_unit">
+
+    <RadioButton
+        android:id="@+id/rb_celsius"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="C°"
+        android:layout_marginRight="20dp"
+        android:checked="true" />
+
+    <RadioButton
+        android:id="@+id/rb_fahrenheit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="F°"
+        android:layout_marginRight="20dp"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:id = "@+id/tv_language_description"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="Language Description"
+        android:gravity="center|left"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/rg_temperature_unit"
+        android:textSize="20dp"/>
+
+    <RadioGroup
+        android:id="@+id/rg_language_description"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:orientation='horizontal'
+        android:layout_below="@+id/tv_language_description">
+
+        <RadioButton
+            android:id="@+id/rb_english"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="English (EN)"
+            android:layout_marginRight="20dp"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/rb_portuguese"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Portuguese (PT)"
+            android:layout_marginRight="20dp"/>
+    </RadioGroup>
+
+</RelativeLayout>
