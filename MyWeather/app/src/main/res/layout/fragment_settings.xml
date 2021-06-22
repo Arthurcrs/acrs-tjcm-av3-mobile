@@ -26,8 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="C°"
-        android:layout_marginRight="20dp"
-        android:checked="true" />
+        android:layout_marginRight="20dp"/>
 
     <RadioButton
         android:id="@+id/rb_fahrenheit"
@@ -60,8 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="English (EN)"
-            android:layout_marginRight="20dp"
-            android:checked="true" />
+            android:layout_marginRight="20dp"/>
 
         <RadioButton
             android:id="@+id/rb_portuguese"
