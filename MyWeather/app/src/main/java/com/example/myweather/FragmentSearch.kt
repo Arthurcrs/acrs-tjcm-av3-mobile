@@ -12,11 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,6 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+
 
 /**
  * A simple [Fragment] subclass.
@@ -36,6 +36,11 @@ class FragmentSearch : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var myview: View
+    lateinit var searchButton: Button
+    lateinit var searchCity: EditText
+    lateinit var progressBar: ProgressBar
+    var unit : String = ""
+    var language : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +54,17 @@ class FragmentSearch : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         myview = inflater.inflate(R.layout.fragment_search, container, false)
-        val SearchButton = myview.findViewById<Button>(R.id.buttonSearch)
-        val SearchCity = myview.findViewById<EditText>(R.id.et_search)
-        SearchButton.setOnClickListener() {
-            search_button_fun(SearchCity.text.toString())
+        searchButton = myview.findViewById<Button>(R.id.buttonSearch)
+        searchCity = myview.findViewById<EditText>(R.id.et_search)
+        searchButton.setOnClickListener() {
+            search_button_fun(searchCity.text.toString())
         }
+
+        progressBar = myview.findViewById<ProgressBar>(R.id.progress_bar)
+        progressBar.visibility = View.INVISIBLE
+
         return myview
 
     }
@@ -112,11 +122,14 @@ class FragmentSearch : Fragment() {
         } else if (isInternetAvailable(myview.context) == false) {
             Toast.makeText(myview.context, "No Internet Connection", Toast.LENGTH_SHORT).show()
         } else {
-            getCurrentData(city)
+            progressBar.visibility = View.VISIBLE
+            getData(city)
+            progressBar.visibility = View.INVISIBLE
         }
     }
 
-    private fun getCurrentData(city: String) {
+    private fun getData(city: String) {
+        loadPreferences()
         val API_KEY = "7c8ff942cb22855b9299f55c068770dc"
         val BASE_URL = "https://api.openweathermap.org/data/2.5/"
         val TAG = "RequestHandler"
@@ -129,7 +142,7 @@ class FragmentSearch : Fragment() {
 
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val response = api.getCityWeather(city,API_KEY).awaitResponse()
+                val response = api.getCityWeather(city,API_KEY,language,unit).awaitResponse()
                 if (response.isSuccessful) {
                     val data = response.body()!!
                     Log.d(TAG, data.toString())
@@ -140,6 +153,26 @@ class FragmentSearch : Fragment() {
                 }
             }
         }
+    }
+
+    // SharedPreferences
+    private fun loadPreferences() {
+        val sharedPreferences = myview.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val celsiusTempSelected = sharedPreferences.getBoolean("CELSIUS SELECTED", true)
+        val englishLanguageSelected = sharedPreferences.getBoolean("ENGLISH SELECTED", true)
+
+        if (celsiusTempSelected == true){
+            unit = "metric"
+        } else {
+            unit = "imperial"
+        }
+
+        if (englishLanguageSelected == true){
+            language = "en"
+        } else {
+            language = "pt_br"
+        }
+
     }
 
 }

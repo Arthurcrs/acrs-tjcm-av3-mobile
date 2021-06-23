@@ -21,4 +21,10 @@
         android:layout_margin="10dp"
         android:layout_toRightOf="@+id/et_search"/>
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>

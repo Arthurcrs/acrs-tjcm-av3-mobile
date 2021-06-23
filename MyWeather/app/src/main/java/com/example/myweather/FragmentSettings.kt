@@ -1,10 +1,12 @@
 package com.example.myweather
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +22,11 @@ class FragmentSettings : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var myview: View
+    lateinit var rbCelsius: RadioButton
+    lateinit var rbFahrenheit: RadioButton
+    lateinit var rbEnglish: RadioButton
+    lateinit var rbPortuguese: RadioButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +40,30 @@ class FragmentSettings : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+
+        myview = inflater.inflate(R.layout.fragment_settings, container, false)
+
+        rbCelsius = myview.findViewById(R.id.rb_celsius)
+        rbFahrenheit = myview.findViewById(R.id.rb_fahrenheit)
+        rbEnglish = myview.findViewById(R.id.rb_english)
+        rbPortuguese = myview.findViewById(R.id.rb_portuguese)
+
+        loadData()
+
+        rbCelsius.setOnClickListener {
+            saveData()
+        }
+        rbFahrenheit.setOnClickListener {
+            saveData()
+        }
+        rbEnglish.setOnClickListener {
+            saveData()
+        }
+        rbPortuguese.setOnClickListener {
+            saveData()
+        }
+
+        return myview
     }
 
     companion object {
@@ -56,4 +85,38 @@ class FragmentSettings : Fragment() {
                 }
             }
     }
+
+    // SharedPreferences
+    private fun saveData() {
+        val celsiusTempSelected = rbCelsius.isChecked()
+        val englishLanguageSelected = rbEnglish.isChecked()
+
+        val sharedPreferences = myview.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        editor.apply {
+            putBoolean("CELSIUS SELECTED", celsiusTempSelected)
+            putBoolean("ENGLISH SELECTED", englishLanguageSelected)
+        }.apply()
+    }
+
+    // SharedPreferences
+    private fun loadData() {
+        val sharedPreferences = myview.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val celsiusTempSelected = sharedPreferences.getBoolean("CELSIUS SELECTED", true)
+        val englishLanguageSelected = sharedPreferences.getBoolean("ENGLISH SELECTED", true)
+
+        if (celsiusTempSelected == true) {
+            rbCelsius.setChecked(true)
+        } else {
+            rbFahrenheit.setChecked(true)
+        }
+
+        if (englishLanguageSelected == true) {
+            rbEnglish.setChecked(true)
+        } else {
+            rbPortuguese.setChecked(true)
+        }
+    }
+
 }
