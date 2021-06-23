@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_search.*
-import java.util.zip.Inflater
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.awaitResponse
+import retrofit2.converter.gson.GsonConverterFactory
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,8 +112,33 @@ class FragmentSearch : Fragment() {
         } else if (isInternetAvailable(myview.context) == false) {
             Toast.makeText(myview.context, "No Internet Connection", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(myview.context, city, Toast.LENGTH_SHORT).show()
-            //TODO: Search Button Function
+            getCurrentData(city)
+        }
+    }
+
+    private fun getCurrentData(city: String) {
+        val API_KEY = "7c8ff942cb22855b9299f55c068770dc"
+        val BASE_URL = "https://api.openweathermap.org/data/2.5/"
+        val TAG = "RequestHandler"
+
+        val api = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiRequests::class.java)
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val response = api.getCityWeather(city,API_KEY).awaitResponse()
+                if (response.isSuccessful) {
+                    val data = response.body()!!
+                    Log.d(TAG, data.toString())
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main){
+                    Toast.makeText(myview.context, "Something went wrong...", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

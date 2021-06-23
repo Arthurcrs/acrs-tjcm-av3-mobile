@@ -1,19 +1,11 @@
 package com.example.myweather
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 class MainActivity : AppCompatActivity() {
@@ -76,6 +68,5 @@ class MainActivity : AppCompatActivity() {
             rb_portuguese.setChecked(true)
         }
     }
-
 
 }
