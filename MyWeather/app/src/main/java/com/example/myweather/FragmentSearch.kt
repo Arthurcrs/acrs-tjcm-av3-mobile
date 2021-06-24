@@ -14,6 +14,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
@@ -39,6 +42,11 @@ class FragmentSearch : Fragment() {
     lateinit var searchButton: Button
     lateinit var searchCity: EditText
     lateinit var progressBar: ProgressBar
+
+    private lateinit var recyclerView: RecyclerView
+    //private val weatherList = ArrayList<WeatherItem>()
+    lateinit var adapter: WeatherAdapter
+
     var unit : String = ""
     var language : String = ""
 
@@ -64,6 +72,14 @@ class FragmentSearch : Fragment() {
 
         progressBar = myview.findViewById<ProgressBar>(R.id.progress_bar)
         progressBar.visibility = View.INVISIBLE
+
+        recyclerView = myview.findViewById(R.id.recycler_view) as RecyclerView
+        recycler_view.adapter = adapter
+        recycler_view.layoutManager = LinearLayoutManager(myview.context)
+        recycler_view.setHasFixedSize(true)
+        adapter = WeatherAdapter(arrayListOf())
+        recyclerView.adapter = adapter
+
 
         return myview
 

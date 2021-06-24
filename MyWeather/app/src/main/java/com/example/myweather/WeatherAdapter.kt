@@ -18,16 +18,14 @@ class WeatherAdapter (private val list: ArrayList<WeatherItem>):
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-        val weatherItem = list[position]
-        holder.name.text = weatherItem.name.toString()
-        holder.temp.text = weatherItem.temp.toString()
+        val currentItem = list[position]
+        holder.name.text = currentItem.name.toString()
+        holder.temp.text = currentItem.temp.toString()
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount() = list.size
 
-    class WeatherViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class WeatherViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
         val name : TextView = itemView.findViewById(R.id.city_name)
         val temp : TextView = itemView.findViewById(R.id.city_temp)
         val image : ImageView = itemView.findViewById(R.id.weather_img)
