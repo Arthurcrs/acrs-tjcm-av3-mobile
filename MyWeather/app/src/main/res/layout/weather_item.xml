@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:padding="7dp">
+
+        <ImageView
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:id="@+id/weather_img"
+            android:src="@drawable/ic_cloudy_day_1"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/city_name"
+            android:layout_margin="10dp"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:text="Cidade"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/city_temp"
+            android:textSize="40dp"
+            android:layout_below="@id/city_name"
+            android:textStyle="bold"
+            android:text="31º"
+            android:layout_alignParentStart="true"
+            android:layout_margin="10dp"
+            />
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
