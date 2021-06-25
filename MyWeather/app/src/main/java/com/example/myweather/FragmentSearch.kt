@@ -1,5 +1,6 @@
 package com.example.myweather
 
+import CityWeather
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -16,12 +17,13 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myweather.api.WeatherResponse
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.coroutines.*
-import retrofit2.Retrofit
-import retrofit2.awaitResponse
+import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Collections.addAll
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,12 +45,13 @@ class FragmentSearch : Fragment() {
     lateinit var searchCity: EditText
     lateinit var progressBar: ProgressBar
 
-    private lateinit var recyclerView: RecyclerView
-    //private val weatherList = ArrayList<WeatherItem>()
-    lateinit var adapter: WeatherAdapter
+    lateinit var recyclerView: RecyclerView
 
-    var unit : String = ""
-    var language : String = ""
+    var unit: String = ""
+    var language: String = ""
+
+    var itemList: MutableList<CityWeather> = mutableListOf()
+    var adapter = WeatherAdapter(itemList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,11 +76,12 @@ class FragmentSearch : Fragment() {
         progressBar = myview.findViewById<ProgressBar>(R.id.progress_bar)
         progressBar.visibility = View.INVISIBLE
 
-        recyclerView = myview.findViewById(R.id.recycler_view) as RecyclerView
-        recycler_view.adapter = adapter
-        recycler_view.layoutManager = LinearLayoutManager(myview.context)
-        recycler_view.setHasFixedSize(true)
-        adapter = WeatherAdapter(arrayListOf())
+        recyclerView = myview.findViewById<RecyclerView>(R.id.recycler_view)
+
+        recyclerView.adapter = adapter
+
+        recyclerView.layoutManager = LinearLayoutManager(myview.context)
+        recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
 
@@ -145,10 +149,10 @@ class FragmentSearch : Fragment() {
     }
 
     private fun getData(city: String) {
+        itemList.clear()
         loadPreferences()
         val API_KEY = "7c8ff942cb22855b9299f55c068770dc"
         val BASE_URL = "https://api.openweathermap.org/data/2.5/"
-        val TAG = "RequestHandler"
 
         val api = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -156,34 +160,40 @@ class FragmentSearch : Fragment() {
             .build()
             .create(ApiRequests::class.java)
 
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val response = api.getCityWeather(city,API_KEY,language,unit).awaitResponse()
-                if (response.isSuccessful) {
+
+
+        api.getCityWeather(city, API_KEY, language, unit)
+            .enqueue(object : Callback<WeatherResponse?> {
+                override fun onResponse(
+                    call: Call<WeatherResponse?>,
+                    response: Response<WeatherResponse?>
+                ) {
                     val data = response.body()!!
-                    Log.d(TAG, data.toString())
+                    itemList.addAll(data.list)
+                    adapter.notifyDataSetChanged()
                 }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main){
-                    Toast.makeText(myview.context, "Something went wrong...", Toast.LENGTH_SHORT).show()
+
+                override fun onFailure(call: Call<WeatherResponse?>, t: Throwable) {
+                    TODO("Not yet implemented")
                 }
-            }
-        }
+            })
     }
+
 
     // SharedPreferences
     private fun loadPreferences() {
-        val sharedPreferences = myview.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            myview.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
         val celsiusTempSelected = sharedPreferences.getBoolean("CELSIUS SELECTED", true)
         val englishLanguageSelected = sharedPreferences.getBoolean("ENGLISH SELECTED", true)
 
-        if (celsiusTempSelected == true){
+        if (celsiusTempSelected == true) {
             unit = "metric"
         } else {
             unit = "imperial"
         }
 
-        if (englishLanguageSelected == true){
+        if (englishLanguageSelected == true) {
             language = "en"
         } else {
             language = "pt_br"
